@@ -102,7 +102,7 @@ function main(){
         }
     });
 
-    setInterval(function(){ws.send({type: 'ping'}); console.log("This is happening");},3000);
+    setInterval(function(){ws.send({type: 'ping'}); console.log("This is happening");},1000);
 
 }
 
