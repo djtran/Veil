@@ -55,25 +55,29 @@ ws.onmessage = function add_update(message){
     var UIA = updated_session.ideas;
 
     console.log(message);
-
-    for(var i = 0; i < UIA.length; i++)
+    var i;
+    if(UIA.length > idea_array.length)
     {
-        if(UIA[i].idea_id != idea_array[i].idea_id)
-        {
-            idea_array[i].append(new new_idea(UIA[i].session_title, UIA[i].session_id, UIA[i].idea_title, UIA[i].idea_id,
-                UIA[i].description, UIA[i].author, UIA[i].reacts));
-            addIdea(UIA[i].idea_title, UIA[i].description, UIA[i].reacts.upvote, UIA[i].reacts.love, UIA[i].reacts.wow);
-        }
-        else
-        {
-            idea_array[i].session_title = UIA[i].session_title;
-            idea_array[i].session_id = UIA[i].session_id;
-            idea_array[i].idea_title = UIA[i].idea_title;
-            idea_array[i].idea_idea = UIA[i].idea_id;
-            idea_array[i].description = UIA[i].description;
-            idea_array[i].author = UIA[i].author;
-            idea_array[i].reacts = UIA[i].reacts;
-        }
+        i = UIA.length - idea_array.length;
+        i = UIA.length - i;
+    }
+
+    for(i; i < UIA.length; i++)
+    {
+
+        idea_array[i].append(new new_idea(UIA[i].session_title, UIA[i].session_id, UIA[i].idea_title, UIA[i].idea_id,
+            UIA[i].description, UIA[i].author, UIA[i].reacts));
+        addIdea(UIA[i].idea_title, UIA[i].description, UIA[i].reacts.upvote, UIA[i].reacts.love, UIA[i].reacts.wow);
+        // else
+        // {
+        //     idea_array[i].session_title = UIA[i].session_title;
+        //     idea_array[i].session_id = UIA[i].session_id;
+        //     idea_array[i].idea_title = UIA[i].idea_title;
+        //     idea_array[i].idea_idea = UIA[i].idea_id;
+        //     idea_array[i].description = UIA[i].description;
+        //     idea_array[i].author = UIA[i].author;
+        //     idea_array[i].reacts = UIA[i].reacts;
+        // }
     }
 
 };
