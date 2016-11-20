@@ -48,7 +48,7 @@ ws.onopen = function initialize(){
 }
 
 ws.onmessage = function add_update(message){
-    var data = JSON.parse(message);
+    var data = JSON.parse(message.data);
     var updated_session = data.object;
     $("#sessionId").text(updated_session.session_id);
     $("#ideaBoard").text(updated_session.session_title);
