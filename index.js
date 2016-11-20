@@ -76,8 +76,8 @@
   // HTTP Routing
   //////////////////////
 
-  app.use(function (req, res) {
-    res.send({ msg: "hello" });
+  app.get('/', function(req, res){
+    res.sendFile('index.html')
   });
 
   server.on('request', app);
