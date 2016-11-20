@@ -31,64 +31,59 @@
     ws.on('message', function incoming(message) {
 
       var data = JSON.parse(message);
-
-      if(!(data == null))
-      {
-        if(data.hasOwnProperty('action'))
-        {
+    if(data.type == "ping")
+    {
+        wss.broadcast(JSON.stringify({type: 'ping'}));
+    }
+    else {
+      if (!(data == null)) {
+        if (data.hasOwnProperty('action')) {
           console.log('1');
-          var debug = interactIdea(db,data);
+          var debug = interactIdea(db, data);
         }
-        else if(data.hasOwnProperty('author'))
-        {
+        else if (data.hasOwnProperty('author')) {
           console.log('2');
 
           submitIdea(db, data);
         }
-        else if(data.hasOwnProperty('create_session'))
-        {
-          if(data.create_session)
-          {
+        else if (data.hasOwnProperty('create_session')) {
+          if (data.create_session) {
             console.log('3');
             createSession(db, data.session_title, data.session_id);
 
-            
 
           }
-          else
-          {
+          else {
             console.log('4');
-            getSession(db,data, function(err,doc)
-            {
-              if(doc == null)
-              {
+            getSession(db, data, function (err, doc) {
+              if (doc == null) {
 
                 var response = {
-                  type : 'find-session',
-                  success : false,
-                  object : null
+                  type: 'find-session',
+                  success: false,
+                  object: null
                 }
 
                 ws.send(JSON.stringify(response));
               }
-              else
-              {
+              else {
                 var response = {
-                  type : 'find-session',
-                  success : true,
-                  object : doc
+                  type: 'find-session',
+                  success: true,
+                  object: doc
                 }
 
                 ws.send(JSON.stringify(response));
-              };
+              }
+              ;
             });
           }
         }
-        else
-        {
+        else {
           ws.send('{ err : "JSON objects did not have some or all of the required fields"}');
         }
       }
+    }
     });
 
   });
