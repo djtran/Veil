@@ -42,99 +42,97 @@
           {
             var response = {
               type : 'interact-idea',
-              success : false;
+              success : false,
+              object : null
             }
             ws.send(JSON.stringify(response));
           }
           else
+
           {
-           if(debug == null)
-           {
             var response = {
               type : 'interact-idea',
-              success : true;
+              success : true,
+              object : debug
             }
             ws.send(JSON.stringify(response));
+
           }
         }
-      }
-      else if(data.hasOwnProperty('author'))
-      {
-        console.log('2');
-        ws.send('You sent me an idea');
-
-        var debug = submitIdea(db, data);
-
-        if(debug == null)
+        else if(data.hasOwnProperty('author'))
         {
-          var response = {
-            type : 'submit-idea',
-            success : false;
-          }
-          ws.send(JSON.stringify(response));
-        }
-        else
-        {
-          var response = {
-            type : 'submit-idea',
-            success : true;
-          }
-          ws.send(JSON.stringify(response));
-        }
-        
-      }
-      else if(data.hasOwnProperty('create_session'))
-      {
-        if(data.create_session)
-        {
-          console.log('3');
-          var debug = createSession(db, data.session_title, data.session_id);
+          console.log('2');
+          ws.send('You sent me an idea');
 
-          if(debug)
+          var debug = submitIdea(db, data);
+
+          if(debug == null)
           {
             var response = {
-              type : 'create-session',
-              success : true;
+              type : 'submit-idea',
+              success : false,
+              object : null
             }
-          }
-          else
-          {
-            var response = {
-              type : 'create-session',
-              success : false;
-            }
-          }
-        }
-        else
-        {
-          console.log('4');
-          var debug2 = getSession(db, data);
-          if(debug2 == null)
-          {
-            var response = {
-              type : 'find-session',
-              success : false;
-            }
-
             ws.send(JSON.stringify(response));
           }
           else
           {
             var response = {
-              type : 'find-session'
-              success : true;
+              type : 'submit-idea',
+              success : true,
+              object : debug
             }
-
             ws.send(JSON.stringify(response));
           }
+
+        }
+        else if(data.hasOwnProperty('create_session'))
+        {
+          if(data.create_session)
+          {
+            console.log('3');
+            var debug = createSession(db, data.session_title, data.session_id);
+
+            var response = {
+              type : 'create-session',
+              success : true,
+              object : debug
+            }
+            ws.send(JSON.stringify(response));
+
+          }
+          else
+          {
+            console.log('4');
+            var debug2 = getSession(db, data);
+            if(debug2 == null)
+            {
+              var response = {
+                type : 'find-session',
+                success : false,
+                object : null,
+              }
+
+              ws.send(JSON.stringify(response));
+            }
+            else
+            {
+              var response = {
+                type : 'find-session'
+                success : true,
+                object : debug
+              }
+
+              ws.send(JSON.stringify(response));
+            }
+          }
+        }
+        else
+        {
+          ws.send('Invalid request');
         }
       }
-      else
-      {
-        ws.send('Invalid request');
-      }
-    }
-  });
+    });
 
   });
 
@@ -173,7 +171,7 @@
 
     return true;
   }
-  //Create a session if one does not already exist, returns true or false
+  //Create a session if one does not already exist, returns session always
   function createSession(db, sessTitle, sessId)
   {
     if(checkConnected(db))
@@ -193,11 +191,11 @@
             ideas : []
           }
           collection.insertOne(sessionObj);
-          return true;
+          return sessionObj;
         }
         else
         {
-          return false;
+          return doc;
         }
       });   
     }
