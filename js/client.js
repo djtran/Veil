@@ -42,7 +42,7 @@ ws.onmessage = function add_update(message){
     var updated_session = data.object;
     var UIA = updated_session.ideas;
 
-    console.log(data);
+    console.log(message);
 
     for(var i = 0; i < UIA.length; i++)
     {
@@ -72,7 +72,7 @@ function main(){
         var myIdeaName = $("textarea#Title").val();
         var myDescription = $("textarea#Description").val();
         if(myIdeaName.length > 0 && myDescription.length > 0) {
-            var packet = JSON.stringify(new new_idea('Default Session','1234',myIdeaName,Math.random()*9999,myDescription,
+            var packet = JSON.stringify(new new_idea('Default Session','1234',myIdeaName,'4321',myDescription,
                 'NEW CHALLENGER',new_reacts(10,3,1)));
             ws.send(packet);
             console.log(packet);
