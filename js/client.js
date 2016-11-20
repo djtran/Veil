@@ -37,6 +37,16 @@ function new_idea(title, s_id, idea_title, idea_id, description, author, reacts)
     this.reacts = reacts;
 }
 
+ws.onopen = function initialize(){
+    var session = {
+        session_title : "Default Session",
+        session_id : "1234",
+        create_session : true,
+    }
+
+    ws.send(JSON.stringify(session));
+}
+
 ws.onmessage = function add_update(message){
     var data = JSON.parse(message);
     var updated_session = data.object;
@@ -68,14 +78,9 @@ ws.onmessage = function add_update(message){
 
 };
 
-function main(){
-    var session = {
-        session_title : "Default Session",
-        session_id : "1234",
-        create_session : true,
-    }
+$(document).ready(main);
 
-    ws.send(JSON.stringify(session));
+function main(){
 
     $('#suggest-button').on('click',function(){
         var myIdeaName = $("textarea#Title").val();
@@ -91,6 +96,4 @@ function main(){
     });
 
 }
-
-$(document).ready(main);
 
