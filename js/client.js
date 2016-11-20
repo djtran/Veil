@@ -77,9 +77,9 @@ ws.onmessage = function add_update(message){
         //     idea_array[i].description = UIA[i].description;
         //     idea_array[i].author = UIA[i].author;
         //     idea_array[i].reacts = UIA[i].reacts;
-        // } 
-    }
-
+        // }
+        //    }
+ 
 };
 
 $(document).ready(main);
