@@ -1,3 +1,5 @@
+  
+  var fs = require('fs');
   var privateKey = fs.readFileSync('sslcert/key.pem', 'utf8');
   var certificate = fs.readFileSync('sslcert/cert.pem', 'utf8');
 
