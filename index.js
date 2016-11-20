@@ -118,7 +118,7 @@
             else
             {
               var response = {
-                type : 'find-session'
+                type : 'find-session',
                 success : true,
                 object : debug
               }
