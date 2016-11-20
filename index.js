@@ -1,5 +1,6 @@
   var server = require('http').createServer()
   , url = require('url')
+  , path = require('path')
   , MongoClient = require('mongodb').MongoClient
   , assert = require('assert')
   , WebSocketServer = require('ws').Server
@@ -16,7 +17,7 @@
   //variable to hold database
   var db;
 
-
+  app.use(express.static(path.join(__dirname, '')));
   //////////////////////////////
   // web socket message handling
   //////////////////////////////
@@ -36,39 +37,104 @@
         {
           console.log('1');
           var debug = interactIdea(db,data);
-          ws.send('You sent me a user action');
-        }
-        else if(data.hasOwnProperty('author'))
-        {
-          console.log('2');
-          ws.send('You sent me an idea');
 
-          var debug = submitIdea(db, data)
-          
-        }
-        else if(data.hasOwnProperty('create_session'))
-        {
-          if(data.create_session)
+          if(debug == null)
           {
-            console.log('3');
-            var debug = createSession(db, data.session_title, data.session_id);
-            ws.send('You want to create a session');
+            var response = {
+              type : 'interact-idea',
+              success : false;
+            }
+            ws.send(JSON.stringify(response));
           }
           else
           {
-            console.log('4');
-            var debug2 = getSession(db, data);
-            ws.send('You want to find a session');
+           if(debug == null)
+           {
+            var response = {
+              type : 'interact-idea',
+              success : true;
+            }
+            ws.send(JSON.stringify(response));
+          }
+        }
+      }
+      else if(data.hasOwnProperty('author'))
+      {
+        console.log('2');
+        ws.send('You sent me an idea');
+
+        var debug = submitIdea(db, data);
+
+        if(debug == null)
+        {
+          var response = {
+            type : 'submit-idea',
+            success : false;
+          }
+          ws.send(JSON.stringify(response));
+        }
+        else
+        {
+          var response = {
+            type : 'submit-idea',
+            success : true;
+          }
+          ws.send(JSON.stringify(response));
+        }
+        
+      }
+      else if(data.hasOwnProperty('create_session'))
+      {
+        if(data.create_session)
+        {
+          console.log('3');
+          var debug = createSession(db, data.session_title, data.session_id);
+
+          if(debug)
+          {
+            var response = {
+              type : 'create-session',
+              success : true;
+            }
+          }
+          else
+          {
+            var response = {
+              type : 'create-session',
+              success : false;
+            }
           }
         }
         else
         {
-          console.log('-1');
-          ws.send('Invalid request');
+          console.log('4');
+          var debug2 = getSession(db, data);
+          if(debug2 == null)
+          {
+            var response = {
+              type : 'find-session',
+              success : false;
+            }
+
+            ws.send(JSON.stringify(response));
+          }
+          else
+          {
+            var response = {
+              type : 'find-session'
+              success : true;
+            }
+
+            ws.send(JSON.stringify(response));
+          }
         }
       }
-      console.log('woof');
-    });
+      else
+      {
+        ws.send('Invalid request');
+      }
+    }
+  });
 
   });
 
@@ -76,8 +142,8 @@
   // HTTP Routing
   //////////////////////
 
-  app.get('/', function(req, res){
-    res.sendFile('index.html')
+  app.get('/*', function(req, res){
+    res.sendFile((path.join(__dirname + '/index.html')));
   });
 
   server.on('request', app);
@@ -279,6 +345,11 @@
     db = database;
     console.log("Database %s connection ready", db);
     collection = db.collection(collectionName);
+
+
+    //reinitialize session
+    db.dropDatabase();
+    createSession(db,'Lady Problems Hackathon Ideation', '1234');
 
 
     server.listen(port,function(){
