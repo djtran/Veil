@@ -62,8 +62,7 @@ ws.onmessage = function add_update(message){
         i = UIA.length - i;
     }
 
-    for(i; i < UIA.length; i++)
-    {
+    for(i; i < UIA.length; i++) {
 
         idea_array.push(new new_idea(UIA[i].session_title, UIA[i].session_id, UIA[i].idea_title, UIA[i].idea_id,
             UIA[i].description, UIA[i].author, UIA[i].reacts));
@@ -79,7 +78,7 @@ ws.onmessage = function add_update(message){
         //     idea_array[i].reacts = UIA[i].reacts;
         // }
         //    }
- 
+    }
 };
 
 $(document).ready(main);
