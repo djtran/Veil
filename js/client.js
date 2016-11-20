@@ -65,7 +65,7 @@ ws.onmessage = function add_update(message){
     for(i; i < UIA.length; i++)
     {
 
-        idea_array[i].append(new new_idea(UIA[i].session_title, UIA[i].session_id, UIA[i].idea_title, UIA[i].idea_id,
+        idea_array.push(new new_idea(UIA[i].session_title, UIA[i].session_id, UIA[i].idea_title, UIA[i].idea_id,
             UIA[i].description, UIA[i].author, UIA[i].reacts));
         addIdea(UIA[i].idea_title, UIA[i].description, UIA[i].reacts.upvote, UIA[i].reacts.love, UIA[i].reacts.wow);
         // else
