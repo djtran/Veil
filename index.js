@@ -52,16 +52,7 @@
             console.log('3');
             createSession(db, data.session_title, data.session_id);
 
-            getSession(db,data,function(err, doc)
-            {
-              var response = {
-                type : 'create-session',
-                success : true,
-                object : doc
-              }
-
-              ws.send(JSON.stringify(response));
-            });
+            
 
           }
           else
@@ -157,7 +148,18 @@
             ideas : []
           }
           collection.insertOne(sessionObj);
-          return sessionObj;
+
+
+          getSession(db,data,function(err, doc)
+            {
+              var response = {
+                type : 'create-session',
+                success : true,
+                object : doc
+              }
+
+              ws.send(JSON.stringify(response));
+            });
         }
         else
         {
