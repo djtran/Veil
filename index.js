@@ -34,7 +34,12 @@
 
       if(!(data == null))
       {
-        if(data.hasOwnProperty('action'))
+        if(data.hasOwnProperty('reset'))
+        {
+          console.log('0');
+          removeSession(db,data);
+        }
+        else if(data.hasOwnProperty('action'))
         {
           console.log('1');
           var debug = interactIdea(db,data);
@@ -351,10 +356,25 @@
   }
 
 
+function removeSession(db, sessionObj)
+{
+  collection.removeOne({session_id : sessionObj.session_id, session_title : sessionObj.session_title}, function(err, r)
+  {
+    if(err == null)
+    {
+      return result;
+    }
+    else
+    {
+      return null;
+    }
+  });
+
+}
+
 //////////////////////////
 // Connectivity  &  Setup
 //////////////////////////
-
 
   //Connect to the mongodb, then set up the server to listen on the port.
   MongoClient.connect(mongoURL, function(err, database){
