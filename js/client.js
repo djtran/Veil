@@ -37,7 +37,7 @@ function new_idea(title, s_id, idea_title, idea_id, description, author, reacts)
     this.reacts = reacts;
 }
 
-ws.on('message', function add_update(message){
+ws.onmessage = function add_update(message){
     var data = JSON.parse(message);
     var updated_session = data.object;
     var UIA = updated_session.ideas;
@@ -61,7 +61,7 @@ ws.on('message', function add_update(message){
             idea_array[i].reacts = UIA[i].reacts;
         }
     }
-});
+};
 
 function main(){
 
