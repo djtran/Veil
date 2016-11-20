@@ -2,7 +2,16 @@
  * Created by Khai on 11/20/2016.
  */
 
-var ws = new WebSocket('ws://ladyhacks-veil.herokuapp.com');
+
+function setupWebSocket()
+{
+    this.ws = new WebSocket('ws://ladyhacks-veil.herokuapp.com');
+    this.ws.onclose() = function(){
+        setTimeout(setupWebSocket, 1000);
+    };
+};
+
+setupWebSocket();
 
 var idea_array = [];
 
@@ -101,8 +110,6 @@ function main(){
             $("textarea#Description").val('');
         }
     });
-
-    setInterval(function(){ws.send({type: 'ping'}); console.log("This is happening");},20000);
 
 }
 

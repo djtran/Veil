@@ -31,11 +31,11 @@
     ws.on('message', function incoming(message) {
 
       var data = JSON.parse(message);
-    if(data.type == "ping")
-    {
-        wss.broadcast(JSON.stringify({type: 'ping'}));
-    }
-    else {
+    // if(data.type == "ping")
+    // {
+    //     wss.broadcast(JSON.stringify({type: 'ping'}));
+    // }
+    // else {
       if (!(data == null)) {
         if (data.hasOwnProperty('action')) {
           console.log('1');
@@ -83,7 +83,7 @@
           ws.send('{ err : "JSON objects did not have some or all of the required fields"}');
         }
       }
-    }
+ //   }
     });
 
   });
