@@ -5,8 +5,8 @@
 
 function setupWebSocket()
 {
-    this.ws = new WebSocket('ws://ladyhacks-veil.herokuapp.com');
-    this.ws.onclose() = function(){
+    var ws = new WebSocket('ws://ladyhacks-veil.herokuapp.com');
+    ws.onclose() = function(){
         setTimeout(setupWebSocket, 1000);
     };
 };
