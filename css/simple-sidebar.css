@@ -5,6 +5,49 @@
  */
 
 /* Session Header Stuff */
+.idea:hover{
+    opacity: 0.9;
+}
+
+.react-counter{
+    position: relative;
+    right: 4px;
+    top: 7px;
+    display: inline;
+    float: left;
+    opacity: .3;
+}
+.react-images{
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.react-images:hover{
+    opacity: .7;
+}
+
+.react-images:active{
+    position: relative;
+    top: 2px;
+}
+
+#like{
+    float: left;
+    display: inline;
+}
+
+#save{
+    float: left;
+    display: inline;
+}
+
+#wow{
+    float: left;
+    display: inline;
+}
+
 #suggest-button:active, #home-button:active{
     position: relative;
     top: 2px;
@@ -103,10 +146,10 @@ body {
 #sidebar-wrapper {
     z-index: 1000;
     position: fixed;
-    left: 250px;
+    left: 270px;
     width: 0;
     height: 100%;
-    margin-left: -250px;
+    margin-left: -270px;
     overflow-y: auto;
     background: #000;
     -webkit-transition: all 0.5s ease;
@@ -116,7 +159,7 @@ body {
 }
 
 #wrapper.toggled #sidebar-wrapper {
-    width: 250px;
+    width: 270px;
 }
 
 #page-content-wrapper {
@@ -180,7 +223,7 @@ body {
 
 @media(min-width:768px) {
     #wrapper {
-        padding-left: 250px;
+        padding-left: 270px;
     }
 
     #wrapper.toggled {
@@ -188,7 +231,7 @@ body {
     }
 
     #sidebar-wrapper {
-        width: 250px;
+        width: 270px;
     }
 
     #wrapper.toggled #sidebar-wrapper {
