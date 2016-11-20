@@ -86,7 +86,7 @@
         }
         else
         {
-          ws.send('Invalid request : JSON objects did not have some or all of the required fields');
+          ws.send('{ err : "JSON objects did not have some or all of the required fields"}');
         }
       }
     });
