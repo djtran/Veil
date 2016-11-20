@@ -230,6 +230,19 @@
               {
                 modIdeas[index].reacts.wow += 1;
               }
+              else if(interactObj.action == 'comment')
+              {
+                var comments = modIdeas[index].comments;
+                if(comments == null)
+                {
+                  comments = [{comment : interactObj.comment, user : interactObj.user}];
+                  modIdeas[index].comments = comments;
+                }
+                else
+                {
+                  modIdeas[index].comments.push({comment : interactObj.comment, user : interactObj.user});                  
+                }
+              }
             }
           });
         }
