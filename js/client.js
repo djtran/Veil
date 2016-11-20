@@ -78,7 +78,7 @@ ws.onmessage = function add_update(message){
         //     idea_array[i].reacts = UIA[i].reacts;
         // }
         //    }
-    } 
+    }
 };
 
 $(document).ready(main);
