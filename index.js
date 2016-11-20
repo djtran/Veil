@@ -150,7 +150,7 @@
           collection.insertOne(sessionObj);
 
 
-          getSession(db,data,function(err, doc)
+          getSession(db,sessionObj,function(err, doc)
             {
               var response = {
                 type : 'create-session',
@@ -158,7 +158,7 @@
                 object : doc
               }
 
-              ws.send(JSON.stringify(response));
+              wsObj.send(JSON.stringify(response));
             });
         }
         else
@@ -363,7 +363,6 @@
 
     //reinitialize session
     db.dropDatabase();
-    createSession(db,'Lady Problems Hackathon Ideation', '1234');
 
 
     server.listen(port,function(){
