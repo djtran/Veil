@@ -16,6 +16,7 @@
 
   //variable to hold database
   var db;
+  var wsObj;
 
   app.use(express.static(path.join(__dirname, '')));
   //////////////////////////////
@@ -26,7 +27,7 @@
     var location = url.parse(ws.upgradeReq.url, true);
     // you might use location.query.access_token to authenticate or share sessions
     // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-    ws.send('Connected to the server');
+    wsObj = ws;
     ws.on('message', function incoming(message) {
 
       var data = JSON.parse(message);
@@ -37,99 +38,64 @@
         {
           console.log('1');
           var debug = interactIdea(db,data);
-
-          if(debug == null)
-          {
-            var response = {
-              type : 'interact-idea',
-              success : false,
-              object : null
-            }
-            ws.send(JSON.stringify(response));
-          }
-          else
-
-          {
-            var response = {
-              type : 'interact-idea',
-              success : true,
-              object : debug
-            }
-            ws.send(JSON.stringify(response));
-
-          }
         }
         else if(data.hasOwnProperty('author'))
         {
           console.log('2');
-          ws.send('You sent me an idea');
 
-          var debug = submitIdea(db, data);
-
-          if(debug == null)
-          {
-            var response = {
-              type : 'submit-idea',
-              success : false,
-              object : null
-            }
-            ws.send(JSON.stringify(response));
-          }
-          else
-          {
-            var response = {
-              type : 'submit-idea',
-              success : true,
-              object : debug
-            }
-            ws.send(JSON.stringify(response));
-          }
-
+          submitIdea(db, data);
         }
         else if(data.hasOwnProperty('create_session'))
         {
           if(data.create_session)
           {
             console.log('3');
-            var debug = createSession(db, data.session_title, data.session_id);
+            createSession(db, data.session_title, data.session_id);
 
-            var response = {
-              type : 'create-session',
-              success : true,
-              object : debug
-            }
-            ws.send(JSON.stringify(response));
+            getSession(db,data,function(err, doc)
+            {
+              var response = {
+                type : 'create-session',
+                success : true,
+                object : doc
+              }
+
+              ws.send(JSON.stringify(response));
+            });
 
           }
           else
           {
             console.log('4');
-            var debug2 = getSession(db, data);
-            if(debug2 == null)
+            getSession(db,data, function(err,doc)
             {
-              var response = {
-                type : 'find-session',
-                success : false,
-                object : null,
-              }
+              if(doc == null)
+              {
 
-              ws.send(JSON.stringify(response));
-            }
-            else
-            {
-              var response = {
-                type : 'find-session',
-                success : true,
-                object : debug
-              }
+                var response = {
+                  type : 'find-session',
+                  success : false,
+                  object : null
+                }
 
-              ws.send(JSON.stringify(response));
-            }
+                ws.send(JSON.stringify(response));
+              }
+              else
+              {
+                var response = {
+                  type : 'find-session',
+                  success : true,
+                  object : doc
+                }
+
+                ws.send(JSON.stringify(response));
+              };
+            });
           }
         }
         else
         {
-          ws.send('Invalid request');
+          ws.send('Invalid request : JSON objects did not have some or all of the required fields');
         }
       }
     });
@@ -250,12 +216,33 @@
             session_id : ideaObj.session_id, 
             session_title : ideaObj.session_title
           }, { $set : {ideas : modIdeas}}, function(err, result) {
-            if(result.result.n != 1)
+            if(err == null){
+
+          getSession(db, ideaObj, function(err,doc)
+          {
+            if(doc == null)
             {
-              return null;
+
+              var response = {
+                type : 'submit-idea',
+                success : false,
+                object : null
+              }
+
+              wsObj.send(JSON.stringify(response));
             }
             else
             {
+              var response = {
+                type : 'submit-idea',
+                success : true,
+                object : doc
+              }
+
+              wsObj.send(JSON.stringify(response));
+            };
+          });          
+
               return result;
             }
           });
@@ -309,19 +296,46 @@
               }
             }
           });
+
+          collection.updateOne({session_id: interactObj.session_id, session_title : interactObj.session_title}, {$set : {ideas : modIdeas} }, function(err, result){
+            if(err == null){
+              
+
+          getSession(db,interactObj, function(err,doc)
+          {
+            if(doc == null)
+            {
+
+              var response = {
+                type : 'interact-idea',
+                success : false,
+                object : null
+              }
+
+              wsObj.send(JSON.stringify(response));
+            }
+            else
+            {
+              var response = {
+                type : 'interact-idea',
+                success : true,
+                object : doc
+              }
+
+              wsObj.send(JSON.stringify(response));
+            };
+          });
+
+
+              return result;
+            }
+            else
+            {
+              return err;
+            }
+          });
+
         }
-
-        collection.updateOne({session_id: interactObj.session_id, session_title : interactObj.session_title}, {$set : {ideas : modIdeas} }, function(err, result){
-          if(result.result.n != 1)
-          {
-            return null;
-          }
-          else
-          {
-            return result;
-          }
-        });
-
       });
     }
   }
