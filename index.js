@@ -1,13 +1,19 @@
-  var server = require('http').createServer()
+  var privateKey = fs.readFileSync('sslcert/key.pem', 'utf8');
+  var certificate = fs.readFileSync('sslcert/cert.pem', 'utf8');
+
+  var credentials = {key:privateKey, cert:certificate};
+
+
+  var express = require('express')
+  , app = express()
+  , server = require('https').createServer(credentials,app)
   , url = require('url')
   , path = require('path')
   , MongoClient = require('mongodb').MongoClient
   , assert = require('assert')
   , WebSocketServer = require('ws').Server
   , wss = new WebSocketServer({ server: server })
-  , express = require('express')
-  , app = express()
-  , port = process.env.PORT || 8080;
+  ,  port = process.env.PORT || 8080;
 
   var collectionName = 'veil'
   var collection;
@@ -241,7 +247,7 @@
                 object : doc
               }
 
-              wsObj.send(JSON.stringify(response));
+              wss.broadcast(JSON.stringify(response));
             };
           });          
 
@@ -324,7 +330,7 @@
                 object : doc
               }
 
-              wsObj.send(JSON.stringify(response));
+              wss.broadcast(JSON.stringify(response));
             };
           });
 
