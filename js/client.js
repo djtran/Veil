@@ -69,7 +69,7 @@ function main(){
         var myIdeaName = $("textarea#Title").val();
         var myDescription = $("textarea#Description").val();
         if(myIdeaName.length > 0 && myDescription.length > 0) {
-            ws.send(JSON.stringify(new new_idea('Default Session','1234',myIdeaName,Math.random()*9999,description,
+            ws.send(JSON.stringify(new new_idea('Default Session','1234',myIdeaName,Math.random()*9999,myDescription,
                 'NEW CHALLENGER',new_reacts(10,3,1))));
             $("textarea#Title").val('');
             $("textarea#Description").val('');
