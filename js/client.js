@@ -42,6 +42,8 @@ ws.onmessage = function add_update(message){
     var updated_session = data.object;
     var UIA = updated_session.ideas;
 
+    console.log(data);
+
     for(var i = 0; i < UIA.length; i++)
     {
         if(UIA[i].idea_id != idea_array[i].idea_id)
@@ -61,6 +63,7 @@ ws.onmessage = function add_update(message){
             idea_array[i].reacts = UIA[i].reacts;
         }
     }
+
 };
 
 function main(){
