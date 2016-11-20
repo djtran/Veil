@@ -27,14 +27,14 @@ function new_reacts(upvotec, lovec, wowc){
     this.wow = wowc;
 }
 
-function new_idea(title, s_id, idea_title, idea_id, description, author, reacts){
+function new_idea(title, s_id, idea_title, idea_id, description, author){
     this.session_title = title;
     this.session_id = s_id;
     this.idea_title = idea_title;
     this.idea_id = idea_id;
     this.description = description;
     this.author = author;
-    this.reacts = reacts;
+    this.reacts = {upvote: 0, love: 0, wow: 0};
 }
 
 ws.onopen = function initialize(){
@@ -91,7 +91,7 @@ function main(){
         var myDescription = $("textarea#Description").val();
         if(myIdeaName.length > 0 && myDescription.length > 0) {
             var packet = JSON.stringify(new new_idea('Default Session','1234',myIdeaName,'4321',myDescription,
-                'NEW CHALLENGER',new_reacts(10,3,1)));
+                'NEW CHALLENGER'));
             ws.send(packet);
             console.log(packet);
             $("textarea#Title").val('');
