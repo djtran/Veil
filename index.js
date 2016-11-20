@@ -157,15 +157,15 @@
 
 
           getSession(db,sessionObj,function(err, doc)
-            {
-              var response = {
-                type : 'create-session',
-                success : true,
-                object : doc
-              }
+          {
+            var response = {
+              type : 'create-session',
+              success : true,
+              object : doc
+            }
 
-              wsObj.send(JSON.stringify(response));
-            });
+            wsObj.send(JSON.stringify(response));
+          });
         }
         else
         {
@@ -190,11 +190,12 @@
     {
       var search = getSession(db,ideaObj, function(err, doc){
 
+        console.log(1);
         if(doc == null)
         {
           return null;
         }
-
+        console.log(2);
         var modIdeas = doc.ideas;
         var exists = false;
         if(modIdeas == null)
@@ -214,6 +215,7 @@
 
         if(exists)
         {
+          console.log(3);
           return null;
         }
         else
@@ -226,30 +228,30 @@
           }, { $set : {ideas : modIdeas}}, function(err, result) {
             if(err == null){
 
-          getSession(db, ideaObj, function(err,doc)
-          {
-            if(doc == null)
-            {
+              getSession(db, ideaObj, function(err,doc)
+              {
+                if(doc == null)
+                {
 
-              var response = {
-                type : 'submit-idea',
-                success : false,
-                object : null
-              }
-
-              wsObj.send(JSON.stringify(response));
-            }
-            else
-            {
-              var response = {
-                type : 'submit-idea',
-                success : true,
-                object : doc
-              }
-
-              wss.broadcast(JSON.stringify(response));
-            };
-          });          
+                  var response = {
+                    type : 'submit-idea',
+                    success : false,
+                    object : null
+                  }
+                  console.log(4);
+                  wsObj.send(JSON.stringify(response));
+                }
+                else
+                {
+                  var response = {
+                    type : 'submit-idea',
+                    success : true,
+                    object : doc
+                  }
+                  console.log(5);
+                  wss.broadcast(JSON.stringify(response));
+                };
+              });          
 
               return result;
             }
@@ -307,32 +309,32 @@
 
           collection.updateOne({session_id: interactObj.session_id, session_title : interactObj.session_title}, {$set : {ideas : modIdeas} }, function(err, result){
             if(err == null){
-              
 
-          getSession(db,interactObj, function(err,doc)
-          {
-            if(doc == null)
-            {
 
-              var response = {
-                type : 'interact-idea',
-                success : false,
-                object : null
-              }
+              getSession(db,interactObj, function(err,doc)
+              {
+                if(doc == null)
+                {
 
-              wsObj.send(JSON.stringify(response));
-            }
-            else
-            {
-              var response = {
-                type : 'interact-idea',
-                success : true,
-                object : doc
-              }
+                  var response = {
+                    type : 'interact-idea',
+                    success : false,
+                    object : null
+                  }
 
-              wss.broadcast(JSON.stringify(response));
-            };
-          });
+                  wsObj.send(JSON.stringify(response));
+                }
+                else
+                {
+                  var response = {
+                    type : 'interact-idea',
+                    success : true,
+                    object : doc
+                  }
+
+                  wss.broadcast(JSON.stringify(response));
+                };
+              });
 
 
               return result;

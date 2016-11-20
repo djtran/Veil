@@ -6,8 +6,8 @@ var ws = new WebSocket('ws://ladyhacks-veil.herokuapp.com');
 
 var idea_array = [];
 
-var addIdea = function(ideaName, description, numLike, numSave, numWow){
-    var myNewElement = "<div class='idea'><h2>" + ideaName + "</h2> <p> Description: " + description + "</p>";
+var addIdea = function(ideaName,arrayindex, description, numLike, numSave, numWow){
+    var myNewElement = "<div id = '" + arrayindex + "'class='idea'><h2>" + ideaName + "</h2> <p> Description: " + description + "</p>";
 
 
     var loadReaction = "<div class='react-wrapper'> <img id='like' class='react-images' src='img/like.png'> <p class='react-counter'>" +
@@ -20,11 +20,21 @@ var addIdea = function(ideaName, description, numLike, numSave, numWow){
 
 };
 
+function react(arrayindex, react)
+{
+    var object = UIA[parseInt(arrayindex)];
 
-function new_reacts(upvotec, lovec, wowc){
-    this.upvote = upvotec;
-    this.love = lovec;
-    this.wow = wowc;
+    var obj4 = {
+        session_id : object.session_id,
+        session_title : object.session_title,
+        idea_id : object.idea_id,
+        idea_title : object.idea_title,
+        action : react,
+        comment : null,
+        user : author
+    }
+
+    ws.send(JSON.stringify(obj4));
 }
 
 function new_idea(title, s_id, idea_title, idea_id, description, author, reacts){
@@ -48,7 +58,7 @@ ws.onmessage = function add_update(message){
         {
             idea_array[i].append(new new_idea(UIA[i].session_title, UIA[i].session_id, UIA[i].idea_title, UIA[i].idea_id,
                 UIA[i].description, UIA[i].author, UIA[i].reacts));
-            addIdea(UIA[i].idea_title, UIA[i].description, UIA[i].reacts.upvote, UIA[i].reacts.love, UIA[i].reacts.wow);
+            addIdea(UIA[i].idea_title, i, UIA[i].description, UIA[i].reacts.upvote, UIA[i].reacts.love, UIA[i].reacts.wow);
         }
         else
         {
@@ -74,6 +84,16 @@ function main(){
             $("textarea#Title").val('');
             $("textarea#Description").val('');
         }
+    });
+
+    $('#like').on('click',function(){
+        react(event.target.id, 'upvote');
+    });
+    $('#save').on('click',function(){
+        react(event.target.id, 'love');
+    });
+    $('#wow').on('click',function(){
+        react(event.target.id, 'wow');
     });
 
 }
