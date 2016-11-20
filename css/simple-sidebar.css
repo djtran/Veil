@@ -87,7 +87,7 @@
     border-width: thin;
     border-color: black;
     border-style: solid;
-    display: block;
+    display: inline-block;
     background-color: white;
     width: auto;
     height: auto;
