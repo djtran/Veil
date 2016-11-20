@@ -39,7 +39,7 @@ function new_idea(title, s_id, idea_title, idea_id, description, author){
 
 ws.onopen = function initialize(){
     var session = {
-        session_title : "Default Session",
+        session_title : "Pitch Session",
         session_id : "1234",
         create_session : true,
     }
@@ -90,7 +90,7 @@ function main(){
         var myIdeaName = $("textarea#Title").val();
         var myDescription = $("textarea#Description").val();
         if(myIdeaName.length > 0 && myDescription.length > 0) {
-            var packet = JSON.stringify(new new_idea('Default Session','1234',myIdeaName,'4321',myDescription,
+            var packet = JSON.stringify(new new_idea('Pitch Session','1234',myIdeaName,'4321',myDescription,
                 'NEW CHALLENGER'));
             ws.send(packet);
             console.log(packet);
