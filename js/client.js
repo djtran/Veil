@@ -40,6 +40,8 @@ function new_idea(title, s_id, idea_title, idea_id, description, author, reacts)
 ws.onmessage = function add_update(message){
     var data = JSON.parse(message);
     var updated_session = data.object;
+    $("#sessionId").text(updated_session.session_id);
+    $("#ideaBoard").text(updated_session.session_title);
     var UIA = updated_session.ideas;
 
     console.log(message);
@@ -67,6 +69,13 @@ ws.onmessage = function add_update(message){
 };
 
 function main(){
+    var session = {
+        session_title : "Default Session",
+        session_id : "1234",
+        create_session : true,
+    }
+
+    ws.send(JSON.stringify(session));
 
     $('#suggest-button').on('click',function(){
         var myIdeaName = $("textarea#Title").val();
