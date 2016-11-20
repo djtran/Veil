@@ -2,7 +2,62 @@
  * Created by Khai on 11/20/2016.
  */
 
- var ws = new WebSocket('ws://ladyhacks-veil.herokuapp.com');
+function setupWebSocket()
+{
+    this.ws = new WebSocket('ws://ladyhacks-veil.herokuapp.com');
+    this.ws.onopen = function initialize(){
+        var session = {
+            session_title : "Pitch Session",
+            session_id : "1234",
+            create_session : true,
+        }
+
+        ws.send(JSON.stringify(session));
+    }
+    this.ws.onmessage = function add_update(message){
+        var data = JSON.parse(message.data);
+        if(data.type == "ping")
+        {
+            // do nothing?
+        }
+        else {
+            var updated_session = data.object;
+            $("#sessionId").text(updated_session.session_id);
+            $("#ideaBoard").text(updated_session.session_title);
+            var UIA = updated_session.ideas;
+
+            console.log(message);
+            var i;
+            if (UIA.length > idea_array.length) {
+                i = UIA.length - idea_array.length;
+                i = UIA.length - i;
+            }
+
+            for (i; i < UIA.length; i++) {
+
+                idea_array.push(new new_idea(UIA[i].session_title, UIA[i].session_id, UIA[i].idea_title, UIA[i].idea_id,
+                    UIA[i].description, UIA[i].author, UIA[i].reacts));
+                addIdea(UIA[i].idea_title, UIA[i].description, UIA[i].reacts.upvote, UIA[i].reacts.love, UIA[i].reacts.wow);
+                // else
+                // {
+                //     idea_array[i].session_title = UIA[i].session_title;
+                //     idea_array[i].session_id = UIA[i].session_id;
+                //     idea_array[i].idea_title = UIA[i].idea_title;
+                //     idea_array[i].idea_idea = UIA[i].idea_id;
+                //     idea_array[i].description = UIA[i].description;
+                //     idea_array[i].author = UIA[i].author;
+                //     idea_array[i].reacts = UIA[i].reacts;
+                // }
+                //    }
+            }
+        }
+    };
+    this.ws.onclose = function(){
+        setTimeout(setupWebSocket, 1000);
+    };
+};
+
+setupWebSocket();
 
  var idea_array = [];
 
@@ -57,72 +112,12 @@ function new_idea(title, s_id, idea_title, idea_id, description, author){
     this.reacts = {upvote: 0, love: 0, wow: 0};
 }
 
-ws.onopen = function initialize(){
-    var session = {
-        session_title : "Default Session",
-        session_id : "1234",
-        create_session : true,
-    }
-
-    ws.send(JSON.stringify(session));
-}
-
-ws.onmessage = function add_update(message){
-    var data = JSON.parse(message.data);
-    var updated_session = data.object;
-    $("#sessionId").text(updated_session.session_id);
-    $("#ideaBoard").text(updated_session.session_title);
-    var UIA = updated_session.ideas;
-
-    console.log(message);
-
-    /////////////////
-    // Update existing
-
-    for(var j = 0; j < idea_array.length; j++)
-    {
-        idea_array[j].session_title = UIA[j].session_title;
-        idea_array[j].session_id = UIA[j].session_id;
-        idea_array[j].idea_title = UIA[j].idea_title;
-        idea_array[j].idea_idea = UIA[j].idea_id;
-        idea_array[j].description = UIA[j].description;
-        idea_array[j].author = UIA[j].author;
-        idea_array[j].reacts = UIA[j].reacts;
-
-    }
-
-
-
-    ////////////////
-    //Add new
-
-    var i = 0;
-    if(UIA.length > idea_array.length)
-    {
-        i = UIA.length - idea_array.length;
-        i = UIA.length - i;
-    }
-
-    for(i; i < UIA.length; i++)
-    {
-
-        idea_array.push(new new_idea(UIA[i].session_title, UIA[i].session_id, UIA[i].idea_title, UIA[i].idea_id,
-            UIA[i].description, UIA[i].author, UIA[i].reacts));
-        addIdea(UIA[i].idea_title, UIA[i].description, UIA[i].reacts.upvote, UIA[i].reacts.love, UIA[i].reacts.wow);
-
-    }
-
-};
-
-$(document).ready(main);
-
 function main(){
-
     $('#suggest-button').on('click',function(){
         var myIdeaName = $("textarea#Title").val();
         var myDescription = $("textarea#Description").val();
         if(myIdeaName.length > 0 && myDescription.length > 0) {
-            var packet = JSON.stringify(new new_idea('Default Session','1234',myIdeaName,'4321',myDescription,
+            var packet = JSON.stringify(new new_idea('Pitch Session','1234',myIdeaName,'4321',myDescription,
                 'NEW CHALLENGER'));
             ws.send(packet);
             console.log(packet);
@@ -142,4 +137,8 @@ function main(){
     });
 
 }
+
+$(document).ready(main);
+
+
 
