@@ -2,7 +2,7 @@
  * Created by Khai on 11/20/2016.
  */
 
-var ws = new WebSocket('wss://ladyhacks-veil.herokuapp.com');
+var ws = new WebSocket('ws://ladyhacks-veil.herokuapp.com');
 
 var idea_array = [];
 
