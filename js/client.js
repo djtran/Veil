@@ -4,7 +4,7 @@
 
  function setupWebSocket()
  {
-    this.ws = new WebSocket('ws://localhost:8080');
+    this.ws = new WebSocket('ws://ladyhacks-veil.herokuapp.com');
     this.ws.onopen = function initialize(){
         var session = {
             session_title : "Pitch Session",
